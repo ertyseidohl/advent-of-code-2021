@@ -51,20 +51,22 @@ allScratched (Five (a, b, c, d, e)) = all (== -1) [a, b, c, d, e]
 isWinner :: Board -> Bool
 isWinner (Board b) = any allScratched b
 
-findWinner :: [Board] -> Maybe Board
-findWinner [] = Nothing
-findWinner (b:bs) = if isWinner b then Just b else findWinner bs
-
-processBoards :: Int -> [Board] -> ([Board], Maybe Board)
+processBoards :: Int -> [Board] -> [Board]
 processBoards n boards = let newBoards = map (processBoard n) boards in
-  (newBoards, findWinner newBoards)
+  filter (not . isWinner) newBoards
+
+playOut :: Board -> [Int] -> (Board, Int)
+playOut b [] = error "No inputs remain (playing out)"
+playOut b (x:xs) = let newBoard = processBoard x b in
+  if isWinner newBoard
+    then (newBoard, x)
+    else playOut newBoard xs
 
 playBoards :: [Int] -> [Board] -> (Board, Int)
 playBoards [] _ = error "No inputs remain"
-playBoards (x:xs) boards = let (newBoards, winningBoard) = processBoards x boards in
-  case winningBoard of
-    Just b -> (b, x)
-    Nothing -> playBoards xs newBoards
+playBoards (x:xs) boards = let newBoards = processBoards x boards in
+  if length newBoards == 1 then playOut (head newBoards) xs else
+  playBoards xs newBoards
 
 sumFive :: Five -> Int
 sumFive (Five (a, b, c, d, e)) = sum [x | x <- [a, b, c, d, e], x /= -1]
