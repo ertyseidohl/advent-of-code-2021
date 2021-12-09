@@ -21,6 +21,21 @@ maintainer:         ertysdl+github@gmail.com
 -- category:
 extra-source-files: CHANGELOG.md
 
+executable day-4-1
+    main-is:          part1.hs
+
+    -- Modules included in this executable, other than Main.
+    -- other-modules:
+
+    -- LANGUAGE extensions used by modules in this package.
+    -- other-extensions:
+    build-depends:
+        base ^>=4.14.3.0,
+        split,
+
+    hs-source-dirs:   src/day04
+    default-language: Haskell2010
+
 executable day-3-2
     main-is:          part2.hs
 
